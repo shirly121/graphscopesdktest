@@ -16,5 +16,5 @@ JAVA_OPT="-server -Xmx1024m -Xms1024m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDu
 cd /home/maxgraph
 mkdir -p $logdir/logs
 
-inner_config=/home/maxgraph/standalone.properties
-/usr/local/jdk1.8.0_191/bin/java ${JAVA_OPT} com.alibaba.graphscopetest.k8s.LogWriterMain $inner_config  1>$logdir/logs/maxgraph-coordinator.out 2>$logdir/logs/maxgraph-coordinator.err
+inner_config=${CONFIG_DIR}/standalone.properties
+/usr/local/jdk1.8.0_191/bin/java ${JAVA_OPT} com.alibaba.graphscopetest.k8s.CopyFromHdfsMain $inner_config  1>$logdir/logs/maxgraph-coordinator.out 2>$logdir/logs/maxgraph-coordinator.err
