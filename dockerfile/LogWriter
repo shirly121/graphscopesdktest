@@ -1,0 +1,19 @@
+ARG ROOT_DIR=/Users/zhouxiaoli/Downloads/graphscopesdktest
+# # # # # # # # # # # # # # # # # # # # # #
+# COMPILE
+FROM reg.docker.alibaba-inc.com/graphcompute_service/maxgraph_compile:0.1.2 AS builder
+# copy maxgraph code to container
+ADD ${ROOT_DIR} /root/maxgraph/
+# compile maxgraph java
+RUN cd /root/maxgraph/ && mvn clean install -DskipTests
+
+# # # # # # # # # # # # # # # # # # # # # #
+# RUNTIME: coordinator
+FROM reg.docker.alibaba-inc.com/graphcompute_service/maxgraph_runtime:0.0.1 AS coordinator
+# copy binary from builder
+COPY --from=builder /root/maxgraph/target/graphscope-sdk-test-0.0.1-SNAPSHOT-jar-with-dependencies.jar /home/maxgraph/
+# copy start script from local
+COPY $ROOT_DIR/dockerfile/logwriter.sh /home/maxgraph/logwriter.sh
+COPY $ROOT_DIR/dockerfile/log4j2.xml /home/maxgraph/log4j2.xml
+WORKDIR /home/maxgraph/
+ENTRYPOINT ["/home/maxgraph/logwriter.sh"]
